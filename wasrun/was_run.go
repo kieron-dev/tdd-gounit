@@ -1,7 +1,12 @@
 package wasrun
 
 type WasRun struct {
-	RunFlag bool
+	RunFlag   bool
+	SetUpFlag bool
+}
+
+func (w *WasRun) SetUp() {
+	w.SetUpFlag = true
 }
 
 func (w *WasRun) TestMethod() {

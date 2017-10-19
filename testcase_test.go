@@ -8,19 +8,31 @@ import (
 )
 
 type TestTestCase struct {
-	t *testing.T
+	t      *testing.T
+	wasRun wasrun.WasRun
+}
+
+func (tc *TestTestCase) SetUp() {
+	tc.wasRun = wasrun.WasRun{}
 }
 
 func (tc *TestTestCase) TestWasRun() {
-	wasRun := wasrun.WasRun{}
-	test := testcase.New(&wasRun, "TestMethod")
+	test := testcase.New(&tc.wasRun, "TestMethod")
 	test.Run()
-	if !wasRun.RunFlag {
+	if !tc.wasRun.RunFlag {
 		tc.t.Error("Method wasn't run")
 	}
 }
 
+func (tc *TestTestCase) TestSetUp() {
+	test := testcase.New(&tc.wasRun, "TestMethod")
+	test.Run()
+	if !tc.wasRun.SetUpFlag {
+		tc.t.Error("SetUp wasn't run")
+	}
+}
+
 func TestMyTestCase(t *testing.T) {
-	testWasRun := testcase.New(&TestTestCase{t}, "TestWasRun")
-	testWasRun.Run()
+	testcase.New(&TestTestCase{t: t}, "TestWasRun").Run()
+	testcase.New(&TestTestCase{t: t}, "TestSetUp").Run()
 }
