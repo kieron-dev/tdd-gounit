@@ -6,10 +6,10 @@ import (
 
 type TestCase struct {
 	testobj interface{}
-	method  string
+	method  func()
 }
 
-func New(testobj interface{}, method string) *TestCase {
+func New(testobj interface{}, method func()) *TestCase {
 	return &TestCase{testobj, method}
 }
 
@@ -19,7 +19,5 @@ func (tc *TestCase) Run() {
 	if setup, ok := st.MethodByName("SetUp"); ok {
 		setup.Func.Call(args)
 	}
-	if method, ok := st.MethodByName(tc.method); ok {
-		method.Func.Call(args)
-	}
+	tc.method()
 }

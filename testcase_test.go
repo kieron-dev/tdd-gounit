@@ -17,7 +17,7 @@ func (tc *TestTestCase) SetUp() {
 }
 
 func (tc *TestTestCase) TestWasRun() {
-	test := testcase.New(&tc.wasRun, "TestMethod")
+	test := testcase.New(&tc.wasRun, tc.wasRun.TestMethod)
 	test.Run()
 	if !tc.wasRun.RunFlag {
 		tc.t.Error("Method wasn't run")
@@ -25,7 +25,7 @@ func (tc *TestTestCase) TestWasRun() {
 }
 
 func (tc *TestTestCase) TestSetUp() {
-	test := testcase.New(&tc.wasRun, "TestMethod")
+	test := testcase.New(&tc.wasRun, tc.wasRun.TestMethod)
 	test.Run()
 	if !tc.wasRun.SetUpFlag {
 		tc.t.Error("SetUp wasn't run")
@@ -33,6 +33,8 @@ func (tc *TestTestCase) TestSetUp() {
 }
 
 func TestMyTestCase(t *testing.T) {
-	testcase.New(&TestTestCase{t: t}, "TestWasRun").Run()
-	testcase.New(&TestTestCase{t: t}, "TestSetUp").Run()
+	tc := TestTestCase{t: t}
+	testcase.New(&tc, tc.TestWasRun).Run()
+	tc = TestTestCase{t: t}
+	testcase.New(&tc, tc.TestSetUp).Run()
 }
